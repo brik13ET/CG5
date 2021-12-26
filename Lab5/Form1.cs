@@ -15,129 +15,51 @@ namespace Lab5
 		public Form1()
 		{
 			InitializeComponent();
-			int[,] lines;
-			var v = Gen(10, 10, trackBar6.Value, out lines);
-			Bitmap b = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-			Draw(v, lines, b);
-			pictureBox1.Image = b;
+			model = new Model3D();
+
 		}
+
+		Model3D model;
 		
-		public Vec3[] Gen(double Soxy, double Sz, int radius, out int[,] lines)
+		public void Draw(Bitmap g)
 		{
-			/*
-			// Cube
-			var ret = new Vec3[]
-			{
-				new Vec3 (-Soxy, -Soxy, -Sz),
-				new Vec3 (Soxy, -Soxy, -Sz),
-				new Vec3 (Soxy, Soxy, -Sz),
-				new Vec3 (-Soxy, Soxy, -Sz),
-				new Vec3 (-Soxy, -Soxy, Sz),
-				new Vec3 (Soxy, -Soxy, Sz),
-				new Vec3 (Soxy, Soxy, Sz),
-				new Vec3 (-Soxy, Soxy, Sz),
-			};
 			
-			lines = new int[,]
+			Vec4[] __v = new Vec4[model.vertex.Length];
+
+
+			for (int i = 0; i < model.vertex.Length; i++)
 			{
-				{0,1 },
-				{1,2 },
-				{2,3 },
-				{3,0 },
-
-				{0,4 },
-				{1,5 },
-				{2,6 },
-				{3,7 },
-
-				{4,5 },
-				{5,6 },
-				{6,7 },
-				{7,4 }
-			};
-			*/
-			const int h = 45, w = 90; // h from -90 to 90, w from -180 to 180
-			Vec3[] ret = new Vec3[w*h];
-			int i = 0;
-			for (int a_h = -h / 2; a_h < h - h / 2; a_h++)
-			{
-				double
-					s_h = Math.Sin(a_h * (180 / h) * Math.PI / 180),
-					c_h = Math.Cos(a_h * (180 / h) * Math.PI / 180);
-					for (int a_w = 0; a_w < w; a_w++)
-					{
-						double
-							s_w = Math.Sin(a_w * (360f / w) * Math.PI / 180),
-							c_w = Math.Cos(a_w * (360f / w) * Math.PI / 180);
-						var v = new Vec3
-						(
-							radius * Soxy * c_h * c_w,
-							radius * Soxy * c_h * s_w,
-							-radius * Sz *  (s_h >= 0 ? s_h : Math.Sin(0.5f* a_h * (180 / h) * Math.PI / 180) + s_h)
-						);
-						ret[i] = v;
-						i++;
-					}
-			}
-
-			
-			lines = new int[w * h *2, 2];
-			i = 0;
-			for (int a = 0; a < h; a++)
-				for (int b = 0; b < w; b++)
-				{
-					if (i+1 < lines.GetLength(0))
-					{
-						lines[i, 0] = a * w + b;
-						lines[i, 1] = a * w + (b + 1) % w;
-						i++;
-					}
-					if (i + 1 < lines.GetLength(0) && (a + 1) % h != 0)
-					{
-						lines[i, 0] = a * w + b;
-						lines[i, 1] = ((a+1) % h) * w + b ;
-						i++;
-					}
-				}
-			return ret;
-		}
-
-		public void Draw(Vec3[] v, int[,] lines, Bitmap g)
-		{
-
-			Vec3[] __v = new Vec3[v.Length];
-
-
-			for (int i = 0; i < v.Length; i++)
-			{
-				Vec4 _v = cur * (new Vec4(v[i]));
-				__v[i] = new Vec3(g.Width / 2 + (int)_v.x, g.Height / 2 - (int)_v.z, 0);
-			}
-			for (int i = 0; i < lines.GetLength(0); i++)
-			{
-				if ((int)__v[lines[i, 0]].x != 0 &&	(int)__v[lines[i, 0]].y != 0)
-				line
+				Vec4 _v = cur * model.vertex[i];
+				__v[i] =
+				cur *
 				(
-					(int)__v[lines[i, 0]].x,
-					(int)__v[lines[i, 0]].y,
-					(int)__v[lines[i, 1]].x,
-					(int)__v[lines[i, 1]].y,
-					g
-				);
+					new Mat4
+					(
+						1, 0, 0, pictureBox1.Width / 2f,
+						0, 1, 1, pictureBox1.Height / 2f,
+						0, 0, 0, 0,
+						0, 0, 0, 1
+					)
+				) * _v;
+				if (
+					__v[i].x >= 0 && __v[i].x < g.Width &&
+					__v[i].y >= 0 && __v[i].y < g.Height
+					)
+					g.SetPixel((int)__v[i].x, (int)__v[i].y, Color.White);
 			}
 			/*
-			for (int i = 0; i < v.Length; i++)
-				if(
-					(int)__v[i].x < g.Width &&
-					(int)__v[i].x >= 0 &&
-					(int)__v[i].y < g.Height &&
-					(int)__v[i].y >= 0
-
-					)
-					g.SetPixel((int)__v[i].x, (int)__v[i].y, Color.Red);
+			for (int i = 0; i < model.lines.GetLength(0); i++)
+			{
+					line
+					(
+						(int)__v[model.lines[i, 0]].x,
+						(int)__v[model.lines[i, 0]].y,
+						(int)__v[model.lines[i, 1]].x,
+						(int)__v[model.lines[i, 1]].y,
+						g
+					);
+			}
 			*/
-			
-			
 		}
 
 		public void line(int x, int y, int x2, int y2, Bitmap b)
@@ -176,25 +98,22 @@ namespace Lab5
 				}
 			}
 		}
-		
 
 		void update()
 		{
-			int[,] lines;
-			var v = Gen((trackBar1.Value / 10) * (trackBar2.Value / 10), (trackBar1.Value * 1f / 10) * (trackBar3.Value*1f / 10), trackBar6.Value, out lines);
+			model.Gen
+			(
+				trackBar1.Value * trackBar2.Value * 10f / (trackBar1.Maximum * trackBar2.Maximum),
+				trackBar1.Value * trackBar3.Value * 10f / (trackBar1.Maximum * trackBar3.Maximum),
+				trackBar6.Value
+			);
 			var b = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-			Draw(v, lines, b);
+			Draw(b);
 			pictureBox1.Image = b;
-			
-			___v = new Vec4[v.Length];
-			for (int i = 0; i < v.Length; i++)
-				___v[i] = new Vec4(v[i]);
-			
 		}
 
 		Vec4[] ___v;
 		bool move;
-		Mat4 _0m;
 		Mat4 cur = Mat4.identity;
 
 		Point _0;
@@ -202,7 +121,6 @@ namespace Lab5
 		private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
 		{
 			_0 = e.Location;
-			_0m = new Mat4(cur);
 			move = true;
 		}
 
@@ -219,7 +137,6 @@ namespace Lab5
 				dx = e.Location.X - _0.X,
 				dy = e.Location.Y - _0.Y;
 
-				uv_rotate(-Math.PI * dy / this.Height, Math.PI * dx / this.Width, 0);
 				update();
 			}
 		}
@@ -248,35 +165,7 @@ namespace Lab5
 		
 		private void uv_rotate(double dz, double dx, double dy)
 		{
-			double
-			co_v = Math.Cos(dx),
-			si_v = Math.Sin(dx),
-			si = Math.Sin(dy),
-			co = Math.Cos(dy),
-			co_g = Math.Sin(dz),
-			si_g = Math.Cos(dz);
-			var rot_h = new Mat4
-			(
-				 co,	si,	0,	0,
-				-si,	co,	0,	0,
-				 0, 	0,	1,	0,
-				 0,		0,	0,	1
-			);
-			var rot_v = new Mat4
-			(
-				co_v,	0,	si_v,	0,
-				0,  	1,	0,  	0,
-				-si_v,	0,	co_v,	0,
-				0,  	0,	0,  	1
-			);
-			var rot_g = new Mat4
-			(
-				1,	0,  	0,  	0,
-				0,	co_g,	si_g,	0,
-				0,	-si_g,	co_g,	0,
-				0,	0,  	0,  	1
-			);
-			cur = rot_v * rot_h * rot_g ;
+
 
 		}
 
@@ -288,12 +177,7 @@ namespace Lab5
 		
 		private void trackBar4_Scroll_1(object sender, EventArgs e)
 		{
-			uv_rotate
-			(
-				trackBar4.Value * Math.PI / (180),
-				trackBar5.Value * Math.PI / (180),
-				trackBar7.Value * Math.PI / (180)
-			);
+
 			update();
 
 		}
@@ -301,12 +185,7 @@ namespace Lab5
 		private void trackBar5_Scroll(object sender, EventArgs e)
 		{
 
-			uv_rotate
-			(
-				trackBar4.Value * Math.PI / (180),
-				trackBar5.Value * Math.PI / (180),
-				trackBar7.Value * Math.PI / (180)
-			);
+
 			update();
 
 		}
@@ -318,14 +197,10 @@ namespace Lab5
 
 		private void trackBar7_Scroll_1(object sender, EventArgs e)
 		{
-			uv_rotate
-			(
-				trackBar4.Value * Math.PI / (180),
-				trackBar5.Value * Math.PI / (180),
-				trackBar7.Value * Math.PI / (180)
-			);
+
 			update();
 
 		}
 	}
+
 }

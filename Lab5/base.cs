@@ -39,11 +39,6 @@ namespace Lab5
 			set { m[3] = value; }
 		}
 
-		public Vec4(Vec3 v)
-		{
-			m = new double[4] { v.x, v.y, v.z, 1 };
-		}
-
 		public Vec4(double x = 0, double y = 0, double z = 0, double h = 0)
 		{
 			m = new double[4] { x, y, z, h };
@@ -63,7 +58,6 @@ namespace Lab5
 			return string.Format("Vec4{{ x: {0}, y: {1}, z: {2}, h: {3} }}", m[0], m[1], m[2], m[3]);
 		}
 	}
-
 	public class Mat4
 	{
 		public static Mat4 identity = new Mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -85,17 +79,6 @@ namespace Lab5
 		public Mat4()
 		{
 			m = new double[4, 4];
-		}
-
-		public Mat4 (Mat3 m)
-		{
-			this.m = new double[4, 4]
-			{
-				{ m[0,0], m[1,0], m[2,0], 0},
-				{ m[0,1], m[1,1], m[2,1], 0 },
-				{ m[0,2], m[1,2], m[2,2], 0 },
-				{ 0, 0, 0, 1 }
-			};
 		}
 
 		public Mat4(Mat4 m)
@@ -142,108 +125,5 @@ namespace Lab5
 			);
 		}
 
-	}
-
-	public class Vec3
-	{
-		private double[] m;
-
-		public double this[int i]
-		{
-			get
-			{
-				return m[i];
-			}
-			set
-			{
-				m[i] = value;
-			}
-		}
-
-		public double x
-		{
-			get { return m[0]; }
-			set { m[0] = value; }
-		}
-		public double y
-		{
-			get { return m[1]; }
-			set { m[1] = value; }
-		}
-		public double z
-		{
-			get { return m[2]; }
-			set { m[2] = value; }
-		}
-
-		public Vec3(double x = 0, double y = 0, double z = 0)
-		{
-			m = new double[3] { x, y, z };
-		}
-
-		public static Vec3 operator *(Mat3 m, Vec3 v)
-		{
-			Vec3 ret = new Vec3();
-			for (int j = 0; j < 3; j++)
-				for (int i = 0; i < 3; i++)
-					ret[j] += m[i, j] * v[i];
-			return ret;
-		}
-
-		public override string ToString()
-		{
-			return string.Format("Vec3{ x: {0}, y: {1}, z: {2} }", m[0], m[1], m[2]);
-		}
-	}
-
-	public class Mat3
-	{
-		private double[,] m;
-
-		public double this[int i, int j]
-		{
-			get
-			{
-				return m[i, j];
-			}
-			set
-			{
-				m[i, j] = value;
-			}
-		}
-
-		public Mat3()
-		{
-			m = new double[3, 3];
-		}
-
-		public Mat3
-		(
-			double _0_0, double _1_0, double _2_0,
-			double _0_1, double _1_1, double _2_1,
-			double _0_2, double _1_2, double _2_2
-		)
-		{
-			m = new double[3, 3] { { _0_0, _1_0, _2_0 }, { _0_1, _1_1, _2_1 }, { _0_2, _1_2, _2_2 } };
-		}
-
-		public static Mat3 operator *(Mat3 m1, Mat3 m2)
-		{
-			Mat3 ret = new Mat3();
-			for (int i = 0; i < 3; i++)
-				for (int j = 0; j < 3; j++)
-					for (int k = 0; k < 3; k++)
-						ret[i, j] += m1[i, k] * m2[k, j];
-			return ret;
-		}
-
-		public override string ToString()
-		{
-			return string.Format
-			(
-			"Mat3{ {0:00.00} {1:00.00} {2:00.00}\n{3:00.00} {4:00.00} {5:00.00}\n{6:00.00} {7:00.00} {8:00.00}}",
-			m[0, 0], m[1, 0], m[2, 0], m[0, 1], m[1, 1], m[2, 1], m[0, 2], m[1, 2], m[2, 2]
-			);
-		}
 	}
 }
