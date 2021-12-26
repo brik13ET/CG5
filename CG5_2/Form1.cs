@@ -19,14 +19,14 @@ namespace CG5_2
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			vao = Gen(20, 20, out lines);
+			vao = Gen(40, 40, out lines);
 			double
 				w = pictureBox1.Width,
 				h = pictureBox1.Height;
 			projection = new Mat4
 			(
 				1, -1, 0, w/2,
-				0.5, 0.5, -1, h/2,
+				0.5, 0.5, 1, h/2,
 				0, 0, 0, 0,
 				0, 0, 0, 1
 			);
@@ -64,85 +64,54 @@ namespace CG5_2
 
 		public Vec4[] Gen(int w, int h, out int[,] lines)
 		{
-			Vec4[] vert_buf = new Vec4[w * h + 1];
-			int i = 0;
-			for (int h_a = -90; h_a <= 90; h_a += 180 / h)
+			Vec4[] vert_buf = new Vec4[w * h + 2];
+			lines = new int[w * h + w * (h + 1), 2];
+			int
+				vert_i = 1,
+				lines_i = 0;
+			// verticles
+			vert_buf[0] = new Vec4
+			(
+				0, 0, -radius
+			);
+			for (int w_i = 0; w_i < w; w_i++)
 			{
-				if (h_a == -90)
-				{
-					vert_buf[i] = new Vec4(0, 0, -radius);
-					i++;
-				}
-				else if (h_a >= 90)
-				{
-					vert_buf[i] = new Vec4(0, 0, 2 * radius);
-					i++;
-				}
-				else
+				double
+					ws = Math.Sin(w_i * 2 * Math.PI / w),
+					wc = Math.Cos(w_i * 2 * Math.PI / w);
+				for (int h_i = 0; h_i < h; h_i++)
 				{
 					double
-						sh = Math.Sin(h_a * Math.PI / 180),
-						ch = Math.Cos(h_a * Math.PI / 180);
-					for (int w_a = 0; w_a <= 360; w_a += 360 / w)
+						hs = Math.Sin(h_i * 2 * Math.PI / h),
+						hc = Math.Cos(h_i * 2 * Math.PI / h);
+					vert_buf[vert_i] = new Vec4
+					(
+						radius*wc*hc,
+						radius*ws*hc,
+						radius*hs * (h_i > h / 2 ? 2 : 1)
+					);
+					
+					// grid gen. vertical
+					if ((vert_i + 1) % h + w_i * h > vert_i)
 					{
-						double
-								sw = Math.Sin(w_a * Math.PI / 180),
-								cw = Math.Cos(w_a * Math.PI / 180);
-						if (h_a <= 0)
-							vert_buf[i] = new Vec4
-							(
-								radius * cw * ch,
-								radius * sw * ch,
-								radius * sh
-							);
-						else // if (h_a > 0)
-							vert_buf[i] = new Vec4
-							(
-								radius * cw * (h_a / 90f),
-								radius * sw * (h_a / 90f),
-								2f * radius * ( 1f - h_a / 90f)
-							);
-						i++;
-					}
-				}
-			}
-
-			lines = new int[w * h * 2 + w, 2];
-			int lines_i = 0;
-			for (int hv = 0; hv < h; hv++)
-			{
-				for (int wv = 0; wv < w; wv++)
-				{
-					if (hv == 0)
-					{
-						lines[lines_i, 0] = 0;
-						lines[lines_i, 1] = 1 + wv;
-						lines_i++;
-						// 2 layer to 1st vertex
-					}
-					else if (hv == 1) // hor layers count > vertical lines
-					{
-						lines[lines_i, 0] = wv % w;
-						lines[lines_i, 1] = 1 + wv % w;
+						lines[lines_i, 0] = vert_i;
+						lines[lines_i, 1] = (vert_i + 1) % h + w_i * h;
 						lines_i++;
 					}
-					else
+					// grid gen. horizontal
+					if ((w_i + 1) * h + h_i + 2< vert_buf.Length)
 					{
-						if (hv * w + ((wv + 1) % w) < vert_buf.Length)
-						{
-							lines[lines_i, 0] = hv * w + wv;
-							lines[lines_i, 1] = hv * w + ((wv - 1) % w);
-							lines_i++;
-						}
-						if ((hv + 1) * w + wv + 1 < vert_buf.Length)
-						{
-							lines[lines_i, 0] = hv * w + wv;
-							lines[lines_i, 1] = (hv + 1) * w + wv + 1;
-							lines_i++;
-						}
+						lines[lines_i, 0] = vert_i;
+						lines[lines_i, 1] = (w_i + 1) * h + h_i + 1;
+						lines_i++;
 					}
+					vert_i++;
 				}
 			}
+			vert_buf[vert_i] = new Vec4
+			(
+				0, 0, radius
+			);
 			return vert_buf;
 		}
 
@@ -342,7 +311,7 @@ namespace CG5_2
 		private void trackBar1_Scroll(object sender, EventArgs e)
 		{
 			radius = (sender as TrackBar).Value;
-			vao = Gen(20, 20, out lines);
+			vao = Gen(40, 40, out lines);
 			Draw();
 		}
 	}
