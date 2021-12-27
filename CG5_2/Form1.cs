@@ -25,8 +25,8 @@ namespace CG5_2
 				h = pictureBox1.Height;
 			projection = new Mat4
 			(
-				1, -1, 0, w/2,
-				0.5, 0.5, 1, h/2,
+				1, 0, 0, w/2,
+				0, 0, 1, h/2,
 				0, 0, 0, 0,
 				0, 0, 0, 1
 			);
@@ -47,7 +47,7 @@ namespace CG5_2
 		Bitmap screen;
 		int[,] lines;
 		Graphics g;
-		double radius;
+		double radius = 40;
 
 		private void pictureBox1_Resize(object sender, EventArgs e)
 		{
@@ -56,7 +56,7 @@ namespace CG5_2
 				h = pictureBox1.Height;
 			projection[0, 3] = 0.5f * w;
 			projection[1, 3] = 0.5f * h;
-			//screen = new Bitmap((int)w, (int)h);
+
 			g = pictureBox1.CreateGraphics();
 			Draw();
 			this.Text = string.Format("w: {0}   h: {1}", w, h);
@@ -88,7 +88,7 @@ namespace CG5_2
 					(
 						radius*wc*hc,
 						radius*ws*hc,
-						radius*hs * (h_i > h / 2 ? 2 : 1)
+						radius*hs * (h_i > h / 2 ? 4 : 1)
 					);
 					
 					// grid gen. vertical
@@ -110,7 +110,7 @@ namespace CG5_2
 			}
 			vert_buf[vert_i] = new Vec4
 			(
-				0, 0, radius
+				0, 0, 4*radius
 			);
 			return vert_buf;
 		}
@@ -163,12 +163,6 @@ namespace CG5_2
 			for (int i = 0; i < vao.Length; i++)
 			{
 				curr_v[i] = projection * transform * vao[i];
-				/*if
-				(
-					curr_v[i].x >= 0 && curr_v[i].x < w &&
-					curr_v[i].y >= 0 && curr_v[i].y < h
-				)
-				screen.SetPixel((int)curr_v[i].x, (int)curr_v[i].y, Color.Red);*/
 			}
 			for (int i = 0; i < lines.GetLength(0) ; i++)
 			{
@@ -226,7 +220,6 @@ namespace CG5_2
 			int
 				min = (sender as TrackBar).Minimum,
 				max = (sender as TrackBar).Maximum;
-			//s = 1 + s * 0.1f;
 			s = s * 2f / (max - min);
 			transform_scale =
 				new Mat4
@@ -272,10 +265,7 @@ namespace CG5_2
 			rotating = e.Button != MouseButtons.Left;
 			Draw();
 		}
-
-		int _x,
-			_y;
-
+		
 		private void trackBar3_Scroll(object sender, EventArgs e)
 		{
 			rotate(

@@ -30,6 +30,8 @@
 		{
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.label5 = new System.Windows.Forms.Label();
+			this.trackBar5 = new System.Windows.Forms.TrackBar();
 			this.label4 = new System.Windows.Forms.Label();
 			this.trackBar4 = new System.Windows.Forms.TrackBar();
 			this.label3 = new System.Windows.Forms.Label();
@@ -38,18 +40,16 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.trackBar2 = new System.Windows.Forms.TrackBar();
 			this.trackBar1 = new System.Windows.Forms.TrackBar();
-			this.label5 = new System.Windows.Forms.Label();
-			this.trackBar5 = new System.Windows.Forms.TrackBar();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// pictureBox1
@@ -94,10 +94,32 @@
 			this.splitContainer1.SplitterDistance = 190;
 			this.splitContainer1.TabIndex = 1;
 			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(12, 226);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(22, 13);
+			this.label5.TabIndex = 12;
+			this.label5.Text = "DX";
+			// 
+			// trackBar5
+			// 
+			this.trackBar5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBar5.Location = new System.Drawing.Point(3, 242);
+			this.trackBar5.Maximum = 180;
+			this.trackBar5.Minimum = 1;
+			this.trackBar5.Name = "trackBar5";
+			this.trackBar5.Size = new System.Drawing.Size(180, 45);
+			this.trackBar5.TabIndex = 11;
+			this.trackBar5.Value = 1;
+			this.trackBar5.Scroll += new System.EventHandler(this.trackBar5_Scroll);
+			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(12, 175);
+			this.label4.Location = new System.Drawing.Point(12, 124);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(31, 13);
 			this.label4.TabIndex = 10;
@@ -119,7 +141,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(12, 124);
+			this.label3.Location = new System.Drawing.Point(12, 175);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(31, 13);
 			this.label3.TabIndex = 8;
@@ -166,7 +188,7 @@
 			this.trackBar2.Name = "trackBar2";
 			this.trackBar2.Size = new System.Drawing.Size(180, 45);
 			this.trackBar2.TabIndex = 4;
-			this.trackBar2.Value = 1;
+			this.trackBar2.Value = 30;
 			this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
 			// 
 			// trackBar1
@@ -179,30 +201,8 @@
 			this.trackBar1.Name = "trackBar1";
 			this.trackBar1.Size = new System.Drawing.Size(180, 45);
 			this.trackBar1.TabIndex = 3;
-			this.trackBar1.Value = 1;
+			this.trackBar1.Value = 40;
 			this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(12, 226);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(22, 13);
-			this.label5.TabIndex = 12;
-			this.label5.Text = "DX";
-			// 
-			// trackBar5
-			// 
-			this.trackBar5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBar5.Location = new System.Drawing.Point(3, 242);
-			this.trackBar5.Maximum = 180;
-			this.trackBar5.Minimum = 1;
-			this.trackBar5.Name = "trackBar5";
-			this.trackBar5.Size = new System.Drawing.Size(180, 45);
-			this.trackBar5.TabIndex = 11;
-			this.trackBar5.Value = 1;
-			this.trackBar5.Scroll += new System.EventHandler(this.trackBar5_Scroll);
 			// 
 			// Form1
 			// 
@@ -220,11 +220,11 @@
 			this.splitContainer1.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBar5)).EndInit();
 			this.ResumeLayout(false);
 
 		}
